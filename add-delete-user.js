@@ -1,5 +1,5 @@
 import path from 'path';
-import { readFile, writeFile, isExists } from './fs-utiles.js';
+import { readFile, writeFile, isExists } from './fs-utilities.js';
 
 const usersPath = path.resolve('users.json');
 
