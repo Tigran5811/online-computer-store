@@ -23,8 +23,34 @@ export const deleteUserName = async (login) => {
     return writeFile(usersPath, users);
 };
 
+export const getUSers = async () => {
+    const users = await readFile(usersPath);
+    return users;
+};
+
 export const deleteUserIndex = async (index) => {
     const users = await readFile(usersPath);
     users.splice(index, 1);
     return writeFile(usersPath, users);
+};
+
+const getRequestData = async (req) => new Promise((res) => {
+    req.on('data', (userData) => {
+        res(JSON.parse(userData));
+    });
+});
+
+export const userMethods = async (method, req) => {
+    switch (method) {
+        case 'GET':
+            return getUSers();
+
+        case 'POST':
+                const { username, password } = await getRequestData(req);
+                await addUser(username, password);
+                return { message: 'User created' };
+
+        default:
+            return { message: 'Method not found' };
+    }
 };
