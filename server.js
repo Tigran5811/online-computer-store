@@ -1,21 +1,10 @@
 import http from 'http';
-import { userMethods } from './add-delete-user.js';
+import app from './src/api/app.js';
 
-const server = http.createServer(async (req, res) => {
-  const { method, url } = req;
+const port = 3000;
 
-  switch (url) {
-    case '/user':
-      const data = await userMethods(method, req);
-      res.end(JSON.stringify(data));
-      break;
+const server = http.createServer(app);
 
-    default:
-      res.end(JSON.stringify({ message: 'unknown url' }));
-      break;
-  }
-});
-
-server.listen(3000, () => {
+server.listen(port, () => {
   console.log('server listen on localhost:3000');
 });
