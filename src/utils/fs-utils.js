@@ -1,22 +1,21 @@
 import fs from 'fs';
 
+export const exists = (filePath) => fs.existsSync(filePath);
+
 export const readFile = async (filePath) => new Promise((res, rej) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-            return rej(err);
-        }
-
-        return res(JSON.parse(data));
-    });
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      return rej(err);
+    }
+    return res(JSON.parse(data));
+  });
 });
 
-export const writeFile = async (filePath, content) => new Promise((res, rej) => {
-    fs.writeFile(filePath, JSON.stringify(content), (err) => {
-        if (err) {
-            return rej(err);
-        }
-        return res();
-    });
+export const writeFile = async (filePath, data) => new Promise((res, rej) => {
+  fs.writeFile(filePath, JSON.stringify(data), (err) => {
+    if (err) {
+      return rej(err);
+    }
+    return res();
+  });
 });
-
-export const isExists = (filePath) => fs.existsSync(filePath);

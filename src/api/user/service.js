@@ -1,30 +1,42 @@
 import path from 'path';
-import { readFile, writeFile, isExists } from '../../utils/fs-utils.js';
+import { readFile, writeFile, exists } from '../../utils/fs-utils.js';
+import { nameValid, userNameValid, ageValid } from './validation.js';
 
-const usersPath = path.resolve('users.json');
+const filePath = path.resolve('user.json');
 
-export const addUser = async (login, pass) => {
-    if (!isExists(usersPath)) {
-        return writeFile(usersPath, [{ login, pass }]);
+export const addData = async (content) => {
+    if (!(await nameValid(content.firstName))) {
+        throw new Error();
     }
-    const users = await readFile(usersPath);
-    const userIsExists = users.find((item) => item.login === login);
-    if (userIsExists) {
-        return 0;
+    if (!(await nameValid(content.lastName))) {
+        throw new Error();
     }
-    users.push({ login, pass });
-    return writeFile(usersPath, users);
+    if (!(await ageValid(content.age))) {
+        throw new Error();
+    }
+    if (!exists(filePath)) {
+        await writeFile(filePath, [content]);
+    }
+    const user = await readFile(filePath);
+
+    if (!(await userNameValid(user, content.userName))) {
+        user.push(content);
+        await writeFile(filePath, user);
+    }
 };
 
-export const deleteUserName = async (login) => {
-    const users = await readFile(usersPath);
-    const userIndex = users.findIndex((item) => item.login === login);
-    users.splice(userIndex, 1);
-    return writeFile(usersPath, users);
+export const nameDel = async (content) => {
+    const user = await readFile(filePath);
+    for (let i = 0; i < user.length; i++) {
+        if (user[i].userName === content) {
+            user.splice(i, 1);
+        }
+    }
+    await writeFile(filePath, user);
 };
 
 export const getUsers = async () => {
-    const users = await readFile(usersPath);
+    const users = await readFile(filePath);
     return users;
 };
 
@@ -33,8 +45,36 @@ export const getUser = async (index) => {
     return users[index];
 };
 
-export const deleteUserIndex = async (index) => {
-    const users = await readFile(usersPath);
-    users.splice(index, 1);
-    return writeFile(usersPath, users);
+export const delIndex = async (content) => {
+    const user = await readFile(filePath);
+    for (let i = 0; i < user.length; i++) {
+        if (i === content) {
+            user.splice(i, 1);
+        }
+    }
+    await writeFile(filePath, user);
+};
+
+export const ubdateUser = async (index, content) => {
+    const user = await readFile(filePath);
+    const {
+        firstName, password, userName, lastName, age,
+    } = content;
+
+    if (firstName && (await nameValid(content.firstName))) {
+        user[index].firstName = firstName;
+    }
+    if (password) {
+        user[index].password = password;
+    }
+    if (userName && (await nameValid(content.userNameValid))) {
+        user[index].userName = userName;
+    }
+    if (lastName && (await nameValid(content.lastName))) {
+        user[index].lastName = lastName;
+    }
+    if (age && (await nameValid(content.ageValid))) {
+        user[index].age = age;
+    }
+    await writeFile(filePath, user);
 };
