@@ -10,10 +10,7 @@ const checkFileExists = async () => {
     }
 };
 
-export const getUsersService = async () => {
-    const users = await readFile(filePath);
-    return users;
-};
+export const getUsersService = async () => readFile(filePath);
 
 export const getUserService = async (index) => {
     const users = await getUsersService();
@@ -41,7 +38,7 @@ export const nameDelService = async (body) => {
             user.splice(i, 1);
         }
     }
-    await writeFile(filePath, user);
+    return writeFile(filePath, user);
 };
 
 export const delIndexService = async (content) => {
@@ -51,7 +48,7 @@ export const delIndexService = async (content) => {
             user.splice(i, 1);
         }
     }
-    await writeFile(filePath, user);
+    return writeFile(filePath, user);
 };
 
 export const updateUserService = async (index, body) => {
