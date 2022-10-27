@@ -36,6 +36,7 @@ router.put(
     .matches('[A-Z]')
     .withMessage(errorMessage.uppercase),
   body('age').isInt({ min: 5, max: 120 }).withMessage(errorMessage.fromToInteger(5, 120)),
+  body('email').isEmail().withMessage(errorMessage.email),
   expressValidationResult,
   updateUserController,
 );
@@ -60,6 +61,7 @@ body('lastName')
 .matches('[A-Z]')
 .withMessage(errorMessage.uppercase),
 body('age').isInt({ min: 5, max: 120 }).withMessage(errorMessage.fromToInteger(5, 120)),
+body('email').isEmail().withMessage(errorMessage.email),
 expressValidationResult,
 createUserController,
 );
