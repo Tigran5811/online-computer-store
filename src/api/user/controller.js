@@ -1,52 +1,52 @@
 import {
-  updateUserService, createUserService, getUserService,
-  getUsersService, delIndexService,
+  updateService, createService, getOneService,
+  getAllService, deleteService,
 } from './service.js';
 
-export const getUsersController = async (req, res, next) => {
+export const getAllController = async (req, res, next) => {
   try {
-    const users = await getUsersService();
+    const users = await getAllService();
     res.send(users);
   } catch (err) {
     next(err);
   }
 };
 
-export const getUserController = async (req, res, next) => {
+export const getOneController = async (req, res, next) => {
   try {
     const { index } = req.params;
-    const users = await getUserService(index);
+    const users = await getOneService(index);
     res.send(users);
   } catch (err) {
     next(err);
   }
 };
 
-export const createUserController = async (req, res, next) => {
+export const createController = async (req, res, next) => {
   try {
     const { body } = req;
-    await createUserService(body);
+    await createService(body);
     res.send('success');
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
-export const delIndexController = async (req, res, next) => {
+export const deleteController = async (req, res, next) => {
   try {
     const { index } = req.params;
-    await delIndexService(Number(index));
+    await deleteService(index);
     res.send('success');
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
-export const updateUserController = async (req, res, next) => {
+export const updateController = async (req, res, next) => {
   try {
     const { index } = req.params;
     const { body } = req;
-    await updateUserService(Number(index), body);
+    await updateService(index, body);
     res.send('success');
   } catch (error) {
     next(error);

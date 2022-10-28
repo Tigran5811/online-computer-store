@@ -10,17 +10,17 @@ const checkFileExists = async () => {
     }
 };
 
-export const getUsersService = async () => readFile(filePath);
+export const getAllService = async () => readFile(filePath);
 
-export const getUserService = async (index) => {
-    const users = await getUsersService();
+export const getOneService = async (index) => {
+        const users = await getAllService();
     if (!users[index]) {
         throw new ServiceError('User not found', 404);
     }
     return users[index];
 };
 
-export const createUserService = async (body) => {
+export const createService = async (body) => {
     await checkFileExists();
     const users = await readFile(filePath);
     const userIsExists = users.find((item) => item.userName === body.userName);
@@ -31,29 +31,20 @@ export const createUserService = async (body) => {
     return writeFile(filePath, users);
 };
 
-export const nameDelService = async (body) => {
+export const deleteService = async (index) => {
+    await getOneService(index);
     const user = await readFile(filePath);
     for (let i = 0; i < user.length; i++) {
-        if (user[i].userName === body) {
+        if (i === index) {
             user.splice(i, 1);
         }
     }
     return writeFile(filePath, user);
 };
 
-export const delIndexService = async (content) => {
-    const user = await readFile(filePath);
-    for (let i = 0; i < user.length; i++) {
-        if (i === content) {
-            user.splice(i, 1);
-        }
-    }
-    return writeFile(filePath, user);
-};
-
-export const updateUserService = async (index, body) => {
+export const updateService = async (index, body) => {
     await checkFileExists();
-    const user = await getUserService(index);
+    const user = await getOneService(index);
     const users = await readFile(filePath);
     users[index] = { ...user, ...body };
     return writeFile(filePath, users);

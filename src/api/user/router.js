@@ -1,69 +1,24 @@
 import { Router } from 'express';
-import { body } from 'express-validator';
+
 import {
-  getUsersController, getUserController, createUserController,
-  delIndexController, updateUserController,
+  getAllController, getOneController, createController,
+  deleteController, updateController,
 } from './controller.js';
 import { expressValidationResult } from '../../utils/utils-middleware.js';
-import * as errorMessage from '../../constants/error-massages.js';
-// import { validateCreateUser, validateUpdateUser } from './validation.js';
+import {
+  updateValidation, getOneValidation, createValidation, deleteValidation,
+} from './validation.js';
 
 const router = Router();
 
-router.get('/', getUsersController);
+router.get('/', getAllController);
 
-router.get('/:index', getUserController);
+router.get('/:index', ...getOneValidation(), expressValidationResult, getOneController);
 
-router.delete('/:index', delIndexController);
+router.delete('/:index', ...deleteValidation(), expressValidationResult, deleteController);
 
-router.put(
-  '/:index',
-  body('userName')
-    .exists().withMessage(errorMessage.require),
-  body('password').isLength({ min: 8, max: 20 }).withMessage(errorMessage.fromToString(8, 20)),
-  body('firstName')
-    .isLength({ min: 3, max: 20 })
-    .withMessage(errorMessage.fromToString(3, 20))
-    .isAlpha()
-    .withMessage(errorMessage.onlyLetters)
-    .matches('[A-Z]')
-    .withMessage(errorMessage.uppercase),
-  body('lastName')
-    .isLength({ min: 3, max: 20 })
-    .withMessage(errorMessage.fromToString(3, 20))
-    .isAlpha()
-    .withMessage(errorMessage.onlyLetters)
-    .matches('[A-Z]')
-    .withMessage(errorMessage.uppercase),
-  body('age').isInt({ min: 5, max: 120 }).withMessage(errorMessage.fromToInteger(5, 120)),
-  body('email').isEmail().withMessage(errorMessage.email),
-  expressValidationResult,
-  updateUserController,
-);
+router.put('/:index', ...updateValidation(), expressValidationResult, updateController);
 
-router.post(
-'/',
-body('userName')
-.exists().withMessage(errorMessage.require),
-body('password').isLength({ min: 8, max: 20 }).withMessage(errorMessage.fromToString(8, 20)),
-body('firstName')
-.isLength({ min: 3, max: 20 })
-.withMessage(errorMessage.fromToString(3, 20))
-.isAlpha()
-.withMessage(errorMessage.onlyLetters)
-.matches('[A-Z]')
-.withMessage(errorMessage.uppercase),
-body('lastName')
-.isLength({ min: 3, max: 20 })
-.withMessage(errorMessage.fromToString(3, 20))
-.isAlpha()
-.withMessage(errorMessage.onlyLetters)
-.matches('[A-Z]')
-.withMessage(errorMessage.uppercase),
-body('age').isInt({ min: 5, max: 120 }).withMessage(errorMessage.fromToInteger(5, 120)),
-body('email').isEmail().withMessage(errorMessage.email),
-expressValidationResult,
-createUserController,
-);
+router.post('/', ...createValidation(), expressValidationResult, createController);
 
 export default router;
