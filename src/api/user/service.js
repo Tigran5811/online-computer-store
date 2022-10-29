@@ -1,51 +1,50 @@
-import path from 'path';
-import { readFile, writeFile, exists } from '../../utils/fs-utils.js';
 import { ServiceError } from '../../utils/error-handling.js';
+import { User } from './models/user.model.js';
 
-const filePath = path.resolve('user.json');
+export const getAllService = async () => User.find();
 
-const checkFileExists = async () => {
-    if (!exists(filePath)) {
-        await writeFile(filePath, []);
-    }
-};
-
-export const getAllService = async () => readFile(filePath);
-
-export const getOneService = async (index) => {
-        const users = await getAllService();
-    if (!users[index]) {
+export const getOneService = async (id) => {
+    const users = await User.findOne({ _id: id });
+    if (!users) {
         throw new ServiceError('User not found', 404);
     }
-    return users[index];
+    return users;
 };
+const checkIsUserExistsByUserName = async (userName) => {
+    const userIsExists = await User.findOne({ userName });
 
-export const createService = async (body) => {
-    await checkFileExists();
-    const users = await readFile(filePath);
-    const userIsExists = users.find((item) => item.userName === body.userName);
     if (userIsExists) {
         throw new ServiceError('username is exists', 409);
     }
-    users.push(body);
-    return writeFile(filePath, users);
 };
+const checkIsUserExistsByEmail = async (email) => {
+    const emailIsExists = await User.findOne({ email });
 
-export const deleteService = async (index) => {
-    await getOneService(index);
-    const user = await readFile(filePath);
-    for (let i = 0; i < user.length; i++) {
-        if (i === index) {
-            user.splice(i, 1);
-        }
+    if (emailIsExists) {
+        throw new ServiceError('email is exists', 409);
     }
-    return writeFile(filePath, user);
 };
 
-export const updateService = async (index, body) => {
-    await checkFileExists();
-    const user = await getOneService(index);
-    const users = await readFile(filePath);
-    users[index] = { ...user, ...body };
-    return writeFile(filePath, users);
+export const createService = async (body) => {
+    await checkIsUserExistsByUserName(body.userName);
+    await checkIsUserExistsByEmail(body.email);
+    const user = new User(body);
+    await user.save();
+    return user;
+};
+
+export const deleteService = async (id) => {
+    await getOneService(id);
+    await User.deleteOne({ _id: id });
+};
+
+export const updateService = async (id, body) => {
+    if (body.userName) {
+        await checkIsUserExistsByUserName(body.userName);
+    }
+    if (body.email) {
+        await checkIsUserExistsByEmail(body.email);
+    }
+    await getOneService(id);
+    await User.updateOne({ _id: id }, body);
 };

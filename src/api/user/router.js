@@ -13,11 +13,11 @@ const router = Router();
 
 router.get('/', getAllController);
 
-router.get('/:index', ...getOneValidation(), expressValidationResult, getOneController);
+router.get('/:id', ...getOneValidation(), expressValidationResult, getOneController);
 
-router.delete('/:index', ...deleteValidation(), expressValidationResult, deleteController);
+router.delete('/:id', ...deleteValidation(), expressValidationResult, deleteController);
 
-router.put('/:index', ...updateValidation(), expressValidationResult, updateController);
+router.put('/:id', ...updateValidation(), expressValidationResult, updateController);
 
 router.post('/', ...createValidation(), expressValidationResult, createController);
 

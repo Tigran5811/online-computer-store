@@ -1,7 +1,10 @@
 import express from 'express';
 import morgan from 'morgan';
+import mongoose from 'mongoose';
 import { ServiceError } from '../utils/error-handling.js';
 import userRouter from './user/router.js';
+
+await mongoose.connect('mongodb+srv://root:root@userdata.65xgdjm.mongodb.net/?retryWrites=true&w=majority');
 
 const app = express();
 

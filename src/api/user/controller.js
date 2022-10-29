@@ -14,8 +14,8 @@ export const getAllController = async (req, res, next) => {
 
 export const getOneController = async (req, res, next) => {
   try {
-    const { index } = req.params;
-    const users = await getOneService(index);
+    const { id } = req.params;
+    const users = await getOneService(id);
     res.send(users);
   } catch (err) {
     next(err);
@@ -34,8 +34,8 @@ export const createController = async (req, res, next) => {
 
 export const deleteController = async (req, res, next) => {
   try {
-    const { index } = req.params;
-    await deleteService(index);
+    const { id } = req.params;
+    await deleteService(id);
     res.send('success');
   } catch (err) {
     next(err);
@@ -44,9 +44,9 @@ export const deleteController = async (req, res, next) => {
 
 export const updateController = async (req, res, next) => {
   try {
-    const { index } = req.params;
+    const { id } = req.params;
     const { body } = req;
-    await updateService(index, body);
+    await updateService(id, body);
     res.send('success');
   } catch (error) {
     next(error);
