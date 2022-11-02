@@ -3,5 +3,13 @@ export class ServiceError extends Error {
     constructor(message, sc) {
         super(message);
         this.statusCode = sc;
+        this.location = 'Service';
+    }
+}
+export class RepositoryError extends Error {
+    constructor(message, sc) {
+        super(message);
+        this.statusCode = sc;
+        this.location = 'Repository';
     }
 }

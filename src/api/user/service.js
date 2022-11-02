@@ -1,41 +1,45 @@
 import { ServiceError } from '../../utils/error-handling.js';
-import { User } from './models/user.model.js';
+import {
+    getOneRepository,
+    getOneByUsernameRepository,
+    createRepository,
+    getAllRepository,
+    deleteRepository,
+    updateRepository,
+    getOneByEmailRepository,
+} from './repository.js';
 
-export const getAllService = async () => User.find();
+export const getAllService = async () => getAllRepository(['email', 'userName']);
 
 export const getOneService = async (id) => {
-    const users = await User.findOne({ _id: id });
+    const users = await getOneRepository(id, ['email', 'userName']);
     if (!users) {
         throw new ServiceError('User not found', 404);
     }
     return users;
 };
 const checkIsUserExistsByUserName = async (userName) => {
-    const userIsExists = await User.findOne({ userName });
-
+    const userIsExists = await getOneByUsernameRepository(userName);
     if (userIsExists) {
         throw new ServiceError('username is exists', 409);
     }
 };
 const checkIsUserExistsByEmail = async (email) => {
-    const emailIsExists = await User.findOne({ email });
-
-    if (emailIsExists) {
-        throw new ServiceError('email is exists', 409);
+    const userIsExists = await getOneByEmailRepository(email);
+    if (userIsExists) {
+        throw new ServiceError('username is exists', 409);
     }
 };
 
 export const createService = async (body) => {
     await checkIsUserExistsByUserName(body.userName);
     await checkIsUserExistsByEmail(body.email);
-    const user = new User(body);
-    await user.save();
-    return user;
+    await createRepository(body);
 };
 
 export const deleteService = async (id) => {
     await getOneService(id);
-    await User.deleteOne({ _id: id });
+    await deleteRepository(id);
 };
 
 export const updateService = async (id, body) => {
@@ -46,5 +50,5 @@ export const updateService = async (id, body) => {
         await checkIsUserExistsByEmail(body.email);
     }
     await getOneService(id);
-    await User.updateOne({ _id: id }, body);
+    await updateRepository(id, body);
 };

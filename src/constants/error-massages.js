@@ -1,4 +1,5 @@
 export const require = 'field is require';
+export const isMongoId = 'field must be mongo id';
 export const isInt = 'field must be integer';
 export const onlyLetters = 'field must contain only letters';
 export const uppercase = 'field must be uppercase';
