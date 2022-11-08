@@ -7,3 +7,7 @@ export const email = 'An invalid email occurs ';
 
 export const fromToString = (min, max) => `field must be from ${min} to ${max} character `;
 export const fromToInteger = (min, max) => `field must be from ${min} to ${max} integer `;
+
+// User
+export const userNameExist = 'username is exists';
+export const userEmailExist = 'username is exists';

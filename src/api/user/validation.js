@@ -29,6 +29,8 @@ export const createValidation = () => [
         .withMessage(errorMessage.uppercase),
     body('age').isInt({ min: 5, max: 120 }).withMessage(errorMessage.fromToInteger(5, 120)),
     body('email').isEmail().withMessage(errorMessage.email),
+    body('school').isLength({ min: 3, max: 20 })
+    .withMessage(errorMessage.fromToString(3, 20)),
 
 ];
 
@@ -52,5 +54,7 @@ export const updateValidation = () => [
         .withMessage(errorMessage.uppercase),
     body('age').optional().isInt({ min: 5, max: 120 }).withMessage(errorMessage.fromToInteger(5, 120)),
     body('email').optional().isEmail().withMessage(errorMessage.email),
+    body('school').isLength({ min: 3, max: 20 })
+    .withMessage(errorMessage.fromToString(3, 20)),
 
 ];

@@ -1,3 +1,4 @@
+import { userNameExist, userEmailExist } from '../../constants/error-massages.js';
 import { ServiceError } from '../../utils/error-handling.js';
 import {
     getOneRepository,
@@ -9,32 +10,56 @@ import {
     getOneByEmailRepository,
 } from './repository.js';
 
-export const getAllService = async () => getAllRepository(['email', 'userName']);
+import { createService as createAdditionalService } from '../user-additional/service.js';
+
+export const getAllService = async () => getAllRepository(
+    ['email', 'userName', 'userAdditional'],
+    ['userAdditional'],
+);
 
 export const getOneService = async (id) => {
-    const users = await getOneRepository(id, ['email', 'userName']);
-    if (!users) {
+    const gotten = await getOneRepository(
+        id,
+        ['email', 'userName', 'userAdditional'],
+        ['userAdditional'],
+    );
+    if (!gotten) {
         throw new ServiceError('User not found', 404);
     }
-    return users;
+    return gotten;
 };
+
 const checkIsUserExistsByUserName = async (userName) => {
     const userIsExists = await getOneByUsernameRepository(userName);
     if (userIsExists) {
-        throw new ServiceError('username is exists', 409);
+        throw new ServiceError(userNameExist, 409);
     }
 };
+
 const checkIsUserExistsByEmail = async (email) => {
     const userIsExists = await getOneByEmailRepository(email);
     if (userIsExists) {
-        throw new ServiceError('username is exists', 409);
+        throw new ServiceError(userEmailExist, 409);
     }
 };
 
 export const createService = async (body) => {
-    await checkIsUserExistsByUserName(body.userName);
-    await checkIsUserExistsByEmail(body.email);
-    await createRepository(body);
+    const {
+        userName, password, firstName, lastName, age, email, ...additionalData
+    } = body;
+    await checkIsUserExistsByUserName(userName);
+    await checkIsUserExistsByEmail(email);
+    const createdAdditionalData = await createAdditionalService(additionalData);
+
+    return createRepository({
+        userName,
+        password,
+        firstName,
+        lastName,
+        age,
+        email,
+        userAdditional: createdAdditionalData.id,
+    });
 };
 
 export const deleteService = async (id) => {

@@ -1,17 +1,20 @@
 import { RepositoryError } from '../../utils/error-handling.js';
 import { User } from './models/user.model.js';
 
-export const getAllRepository = async (projections) => {
+export const getAllRepository = async (projections, populateProps) => {
     try {
-        return await User.find().select(projections);
+        return await User.find().select(projections).populate(populateProps);
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }
 };
 
-export const getOneRepository = async (id, projections) => {
+export const getOneRepository = async (id, projections, populateProps) => {
     try {
-        return await User.findOne({ _id: id }, projections);
+        return await User.findOne(
+            { _id: id },
+            projections,
+        ).populate(populateProps);
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }
@@ -24,6 +27,7 @@ export const getOneByUsernameRepository = async (userName) => {
         throw new RepositoryError(err.message, 500);
     }
 };
+
 export const getOneByEmailRepository = async (email) => {
     try {
         return await User.findOne({ email });
@@ -34,9 +38,9 @@ export const getOneByEmailRepository = async (email) => {
 
 export const createRepository = async (body) => {
     try {
-        const user = new User(body);
-        await user.save();
-        return user;
+        const created = new User(body);
+        await created.save();
+        return created;
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }
@@ -45,6 +49,7 @@ export const createRepository = async (body) => {
 export const deleteRepository = async (id) => {
     try {
         await User.deleteOne({ _id: id });
+        return { id };
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }
@@ -52,7 +57,7 @@ export const deleteRepository = async (id) => {
 
 export const updateRepository = async (id, body) => {
     try {
-        await User.updateOne({ _id: id }, body);
+        return await User.updateOne({ _id: id }, body);
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }
