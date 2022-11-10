@@ -2,6 +2,8 @@ import express from 'express';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import userRouter from './user/router.js';
+import laptopRouter from './laptop/router.js';
+import orderRouter from './order/router.js';
 
 await mongoose.connect('mongodb+srv://root:root@userdata.65xgdjm.mongodb.net/?retryWrites=true&w=majority');
 
@@ -11,6 +13,8 @@ app.use(express.json());
 app.use(morgan('combined'));
 
 app.use('/user', userRouter);
+app.use('/laptop', laptopRouter);
+app.use('/order', orderRouter);
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
