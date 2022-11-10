@@ -3,8 +3,8 @@ import { Router } from 'express';
 import {
   createController,
   getAllController,
-  // getOneController,
-  // deleteController, updateController,
+  getOneController,
+  deleteController,
 } from './controller.js';
 // import { expressValidationResult } from '../../utils/utils-middleware.js';
 // import {
@@ -15,9 +15,9 @@ const router = Router();
 
 router.get('/', getAllController);
 
-// router.get('/:id', ...getOneValidation(), expressValidationResult, getOneController);
+router.get('/:id', getOneController);
 
-// router.delete('/:id', ...deleteValidation(), expressValidationResult, deleteController);
+router.delete('/:id', deleteController);
 
 // router.put('/:id', ...updateValidation(), expressValidationResult, updateController);
 

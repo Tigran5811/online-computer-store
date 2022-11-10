@@ -23,4 +23,4 @@ const laptopSchema = new mongoose.Schema({
     },
 });
 
-export const Laptop = mongoose.model('Laptops', laptopSchema);
+export const Laptop = mongoose.model('Laptop', laptopSchema);
