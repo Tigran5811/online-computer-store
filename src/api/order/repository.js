@@ -36,10 +36,10 @@ export const deleteRepository = async (id) => {
     }
 };
 
-export const getAllOrdersByUserRepository = async (id, populateProps, populateProps1) => {
-    try {
-        return Order.findById({ id }).populate([populateProps, populateProps1]);
-    } catch (err) {
-        throw new RepositoryError(err.message, 500);
-    }
-};
+// export const getAllOrdersByUserRepository = async (id, populateProps, populateProps1) => {
+//     try {
+//         return await Order.find({ _id: id }).populate([populateProps, populateProps1]);
+//     } catch (err) {
+//         throw new RepositoryError(err.message, 500);
+//     }
+// };

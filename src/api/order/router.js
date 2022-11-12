@@ -5,6 +5,7 @@ import {
   getAllController,
   getOneController,
   deleteController,
+  getAllOrdersByUserServiceController,
 } from './controller.js';
 // import { expressValidationResult } from '../../utils/utils-middleware.js';
 // import {
@@ -19,7 +20,7 @@ router.get('/:id', getOneController);
 
 router.delete('/:id', deleteController);
 
-// router.put('/:id', ...updateValidation(), expressValidationResult, updateController);
+router.put('/:id', getAllOrdersByUserServiceController);
 
 router.post('/', createController);
 

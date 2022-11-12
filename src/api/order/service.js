@@ -5,6 +5,7 @@ import {
     createRepository,
     getAllRepository,
     deleteRepository,
+    // getAllOrdersByUserRepository,
     // updateRepository,
 } from './repository.js';
 
@@ -18,11 +19,19 @@ export const getOneService = async (id) => {
     return gotten;
 };
 
-export const createService = async (body) => {
-    createRepository(body);
-};
+export const createService = async (body) => createRepository(body);
 
 export const deleteService = async (id) => {
     await getOneService(id);
     await deleteRepository(id);
+};
+
+export const getAllOrdersByUserService = async (id) => {
+    const user = await getAllRepository(['user'], ['laptop']);
+    const k = user.find((item) => {
+        if (item.user.id === id) {
+            return item.laptop;
+        }
+    });
+    return k.laptop;
 };

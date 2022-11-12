@@ -3,7 +3,7 @@ import {
   getAllService,
   getOneService,
    deleteService,
-
+   getAllOrdersByUserService,
 } from './service.js';
 
 export const getAllController = async (req, res, next) => {
@@ -40,6 +40,17 @@ export const deleteController = async (req, res, next) => {
     const { id } = req.params;
     const deleted = await deleteService(id);
     res.send(deleted);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getAllOrdersByUserServiceController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const gotten = await getAllOrdersByUserService(id);
+    console.log(gotten);
+    res.send(gotten);
   } catch (err) {
     next(err);
   }
