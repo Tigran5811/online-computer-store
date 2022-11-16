@@ -1,15 +1,13 @@
 import {
   createService,
-  getAllService,
   getOneService,
-   deleteService,
-   getAllOrdersByUserService,
+  getAllService, deleteService,
 } from './service.js';
 
 export const getAllController = async (req, res, next) => {
   try {
-    const orders = await getAllService();
-    res.send(orders);
+    const images = await getAllService();
+    res.send(images);
   } catch (err) {
     next(err);
   }
@@ -18,17 +16,18 @@ export const getAllController = async (req, res, next) => {
 export const getOneController = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const users = await getOneService(id);
-    res.send(users);
+    const image = await getOneService(id);
+    res.send(image);
   } catch (err) {
     next(err);
   }
 };
 
+
 export const createController = async (req, res, next) => {
   try {
-    const { body } = req;
-    const created = await createService(body);
+    const path = { path: req.file.path }
+    const created = await createService(path);
     res.send(created);
   } catch (err) {
     next(err);
@@ -45,12 +44,3 @@ export const deleteController = async (req, res, next) => {
   }
 };
 
-export const getAllOrdersByUserController = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const gotten = await getAllOrdersByUserService(id);
-    res.send(gotten);
-  } catch (err) {
-    next(err);
-  }
-};

@@ -21,6 +21,11 @@ const laptopSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    laptopImage: {
+        type: mongoose.Types.ObjectId,
+        required: true,
+        ref: 'Images',
+    },
 });
 
 export const Laptop = mongoose.model('Laptop', laptopSchema);

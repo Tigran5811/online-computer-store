@@ -9,12 +9,6 @@ export const deleteValidation = () => [
     param('id').isMongoId().withMessage(errorMessage.isMongoId),
 ];
 
-export const createValidation = () => [
-    body('user').isMongoId().withMessage(errorMessage.isMongoId),
-    body('laptop').isMongoId().withMessage(errorMessage.isMongoId),
-
-];
-
-export const getAllOrdersByUserValidation = () => [
-    param('id').isMongoId().withMessage(errorMessage.isMongoId),
-];
+// export const createValidation = () => [
+//     body('path').isLength({ min: 5, max: 100 }).withMessage(errorMessage.fromToString(5, 100)),
+// ];

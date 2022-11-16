@@ -6,10 +6,10 @@ import {
     deleteRepository,
 } from './repository.js';
 
-export const getAllService = async () => getAllRepository([], {}, ['user', 'laptop']);
+export const getAllService = async () => getAllRepository();
 
 export const getOneService = async (id) => {
-    const gotten = await getOneRepository(id, ['user', 'laptop']);
+    const gotten = await getOneRepository(id);
     if (!gotten) {
         throw new ServiceError('User not found', 404);
     }
@@ -20,11 +20,6 @@ export const createService = async (body) => createRepository(body);
 
 export const deleteService = async (id) => {
     await getOneService(id);
-    await deleteRepository(id);
+    return deleteRepository(id);
 };
 
-export const getAllOrdersByUserService = async (userId) => {
-    const users = await getAllRepository(['laptop'], { user: userId }, ['user', 'laptop']);
-
-    return users;
-};

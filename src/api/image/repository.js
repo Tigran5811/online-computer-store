@@ -1,17 +1,17 @@
 import { RepositoryError } from '../../utils/error-handling.js';
-import { Order } from './models/order.model.js';
+import { Images } from './models/images.model.js';
 
-export const getAllRepository = async (selectPop, where, populateProps) => {
+export const getAllRepository = async () => {
     try {
-        return await Order.find().select(selectPop).where(where).populate(populateProps);
+        return await Images.find()
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }
 };
 
-export const getOneRepository = async (id, populateProps) => {
+export const getOneRepository = async (id) => {
     try {
-        return await Order.findOne({ _id: id }).populate(populateProps);
+        return await Images.findOne({ _id: id });
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }
@@ -19,7 +19,7 @@ export const getOneRepository = async (id, populateProps) => {
 
 export const createRepository = async (body) => {
     try {
-        const created = new Order(body);
+        const created = new Images(body);
         await created.save();
         return created;
     } catch (err) {
@@ -29,9 +29,11 @@ export const createRepository = async (body) => {
 
 export const deleteRepository = async (id) => {
     try {
-        await Order.deleteOne({ _id: id });
+        await Images.deleteOne({ _id: id });
         return { id };
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }
 };
+
+

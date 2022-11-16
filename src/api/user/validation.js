@@ -1,12 +1,12 @@
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 import * as errorMessage from '../../constants/error-massages.js';
 
 export const getOneValidation = () => [
-
+    param('id').isMongoId().withMessage(errorMessage.isMongoId),
 ];
 
 export const deleteValidation = () => [
-
+    param('id').isMongoId().withMessage(errorMessage.isMongoId),
 ];
 
 export const createValidation = () => [
@@ -35,6 +35,7 @@ export const createValidation = () => [
 ];
 
 export const updateValidation = () => [
+    param('id').isMongoId().withMessage(errorMessage.isMongoId),
     body('userName').optional()
         .exists().withMessage(errorMessage.require),
     body('password').optional().isLength({ min: 8, max: 20 }).withMessage(errorMessage.fromToString(8, 20)),

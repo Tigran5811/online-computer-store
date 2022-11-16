@@ -1,43 +1,29 @@
 import { RepositoryError } from '../../utils/error-handling.js';
 import { Laptop } from './models/laptop.model.js';
 
-export const getAllRepository = async (projections) => {
+export const getAllRepository = async (projections,populateProps) => {
     try {
-        return await Laptop.find().select(projections);
+        return await Laptop.find().select(projections).populate(populateProps);
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }
 };
 
-export const getOneRepository = async (id, projections) => {
+export const getOneRepository = async (id, projections,populateProps) => {
     try {
         return await Laptop.findOne(
             { _id: id },
             projections,
-        );
+        ).populate(populateProps)
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }
 };
 
-// export const getOneByUsernameRepository = async (Manufacturer) => {
-//     try {
-//         return await Laptop.findOne({ Manufacturer });
-//     } catch (err) {
-//         throw new RepositoryError(err.message, 500);
-//     }
-// };
-
-// export const getOneByEmailRepository = async (email) => {
-//     try {
-//         return await User.findOne({ email });
-//     } catch (err) {
-//         throw new RepositoryError(err.message, 500);
-//     }
-// };
 
 export const createRepository = async (body) => {
     try {
+        console.log(body);
         const created = new Laptop(body);
         await created.save();
         return created;
