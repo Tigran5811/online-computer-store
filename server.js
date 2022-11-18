@@ -1,10 +1,13 @@
 import http from 'http';
 import app from './src/api/app.js';
+import { init } from './src/index.js';
 
-const port = 3000;
+const port = process.env.PORT || 3000;
+
+await init();
 
 const server = http.createServer(app);
 
 server.listen(port, () => {
-  console.log('server listen on localhost:3000');
+  console.log(`server listen on localhost:${port}`);
 });

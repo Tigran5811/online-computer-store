@@ -3,7 +3,7 @@ import { Images } from './models/images.model.js';
 
 export const getAllRepository = async () => {
     try {
-        return await Images.find()
+        return await Images.find();
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }
@@ -35,5 +35,3 @@ export const deleteRepository = async (id) => {
         throw new RepositoryError(err.message, 500);
     }
 };
-
-

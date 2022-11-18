@@ -1,9 +1,9 @@
 import { RepositoryError } from '../../utils/error-handling.js';
-import { Laptop } from './models/laptop.model.js';
+import { Processor } from './models/model.js';
 
 export const getAllRepository = async (projections, populateProps) => {
     try {
-        return await Laptop.find().select(projections).populate(populateProps);
+        return await Processor.find().select(projections).populate(populateProps);
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }
@@ -11,7 +11,7 @@ export const getAllRepository = async (projections, populateProps) => {
 
 export const getOneRepository = async (id, projections, populateProps) => {
     try {
-        return await Laptop.findOne(
+        return await Processor.findOne(
             { _id: id },
             projections,
         ).populate(populateProps);
@@ -22,7 +22,7 @@ export const getOneRepository = async (id, projections, populateProps) => {
 
 export const createRepository = async (body) => {
     try {
-        const created = new Laptop(body);
+        const created = new Processor(body);
         await created.save();
         return created;
     } catch (err) {
@@ -32,7 +32,7 @@ export const createRepository = async (body) => {
 
 export const deleteRepository = async (id) => {
     try {
-        await Laptop.deleteOne({ _id: id });
+        await Processor.deleteOne({ _id: id });
         return { id };
     } catch (err) {
         throw new RepositoryError(err.message, 500);
@@ -41,7 +41,7 @@ export const deleteRepository = async (id) => {
 
 export const updateRepository = async (id, body) => {
     try {
-        return await Laptop.updateOne({ _id: id }, body);
+        return await Processor.updateOne({ _id: id }, body);
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }

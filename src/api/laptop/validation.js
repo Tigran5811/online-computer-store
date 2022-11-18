@@ -20,7 +20,6 @@ export const createValidation = () => [
     body('Diagonal').isInt({ min: 10, max: 30 }).withMessage(errorMessage.fromToInteger(10, 30)),
     body('Price').isInt({ min: 50, max: 10000 }).withMessage(errorMessage.fromToInteger(50, 10000)),
     body('laptopImage').isMongoId().withMessage(errorMessage.isMongoId),
-    body('laptopImage').isMongoId().withMessage(errorMessage.isMongoId),
 ];
 
 export const updateValidation = () => [

@@ -22,4 +22,3 @@ export const deleteService = async (id) => {
     await getOneService(id);
     return deleteRepository(id);
 };
-

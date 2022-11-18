@@ -16,8 +16,6 @@
         "import/extensions": "off",
         "no-case-declarations": "off",
         "no-plusplus": "off",
-        "guard-for-in":"off",
-        
-        
+        "guard-for-in":"off"
     }
 }

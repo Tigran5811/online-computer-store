@@ -8,13 +8,13 @@ import {
 } from './repository.js';
 import { getOneService as getOneServiceImage } from '../image/service.js';
 
-export const getAllService = async () => getAllRepository(['Manufacturer', 'Price', 'laptopImage'], ['laptopImage']);
+export const getAllService = async () => getAllRepository(['name', 'price', 'image'], ['image']);
 
 export const getOneService = async (id) => {
     const gotten = await getOneRepository(
         id,
-        ['Manufacturer', 'Price', 'laptopImage'],
-        ['laptopImage'],
+        ['name', 'price', 'image'],
+        ['image'],
     );
     if (!gotten) {
         throw new ServiceError('User not found', 404);
@@ -24,16 +24,17 @@ export const getOneService = async (id) => {
 
 export const createService = async (body) => {
     const {
-        Manufacturer, SSD, Resolution, Diagonal, Price, laptopImage,
+        name, brand, totalCores, totalThreads, generation, price, image,
     } = body;
-    const getOneImage = await getOneServiceImage(laptopImage);
+    const getOneImage = await getOneServiceImage(image);
     return createRepository({
-        Manufacturer,
-        SSD,
-        Resolution,
-        Diagonal,
-        Price,
-        laptopImage: getOneImage.id,
+        name,
+        brand,
+        totalCores,
+        totalThreads,
+        generation,
+        price,
+        image: getOneImage.id,
     });
 };
 

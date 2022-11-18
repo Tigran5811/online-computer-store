@@ -1,16 +1,13 @@
 import { Router } from 'express';
 
 import {
-  createController,
-  getAllController, getOneController,
-  deleteController,
+  getAllController, getOneController, createController,
+  deleteController, updateController,
 } from './controller.js';
 import { expressValidationResult } from '../../utils/utils-middleware.js';
 import {
-  getOneValidation, deleteValidation,
+  updateValidation, getOneValidation, createValidation, deleteValidation,
 } from './validation.js';
-
-import { upload } from '../../utils/multer.js';
 
 const router = Router();
 
@@ -20,6 +17,8 @@ router.get('/:id', ...getOneValidation(), expressValidationResult, getOneControl
 
 router.delete('/:id', ...deleteValidation(), expressValidationResult, deleteController);
 
-router.post('/', upload.single('image'), createController);
+router.put('/:id', ...updateValidation(), expressValidationResult, updateController);
+
+router.post('/', ...createValidation(), expressValidationResult, createController);
 
 export default router;
