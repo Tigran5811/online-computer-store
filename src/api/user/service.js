@@ -9,11 +9,11 @@ import {
     updateRepository,
     getOneByEmailRepository,
 } from './repository.js';
-
 import { createService as createAdditionalService } from '../user-additional/service.js';
+import { hashPassword } from '../../utils/bcrypt-utils.js';
 
 export const getAllService = async () => getAllRepository(
-    ['email', 'userName', 'userAdditional'],
+    ['email', 'userName', 'userAdditional', 'password'],
     ['userAdditional'],
 );
 
@@ -29,6 +29,14 @@ export const getOneService = async (id) => {
     return gotten;
 };
 
+export const getOneByEmailService = async (email) => {
+    const gotten = await getOneByEmailRepository(email, ['password']);
+    if (!gotten) {
+        throw new ServiceError('User not found', 404);
+    }
+    return gotten;
+};
+
 const checkIsUserExistsByUserName = async (userName) => {
     const userIsExists = await getOneByUsernameRepository(userName);
     if (userIsExists) {
@@ -37,7 +45,7 @@ const checkIsUserExistsByUserName = async (userName) => {
 };
 
 const checkIsUserExistsByEmail = async (email) => {
-    const userIsExists = await getOneByEmailRepository(email);
+    const userIsExists = await getOneByEmailRepository(email, ['id']);
     if (userIsExists) {
         throw new ServiceError(userEmailExist, 409);
     }
@@ -51,9 +59,11 @@ export const createService = async (body) => {
     await checkIsUserExistsByEmail(email);
     const createdAdditionalData = await createAdditionalService(additionalData);
 
+    const hash = await hashPassword(password);
+
     return createRepository({
         userName,
-        password,
+        password: hash,
         firstName,
         lastName,
         age,

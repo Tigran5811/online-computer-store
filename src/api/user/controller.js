@@ -1,5 +1,5 @@
 import {
-  updateService, createService, getOneService,
+  updateService, getOneService,
   getAllService, deleteService,
 } from './service.js';
 
@@ -17,16 +17,6 @@ export const getOneController = async (req, res, next) => {
     const { id } = req.params;
     const users = await getOneService(id);
     res.send(users);
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const createController = async (req, res, next) => {
-  try {
-    const { body } = req;
-    const created = await createService(body);
-    res.send(created);
   } catch (err) {
     next(err);
   }

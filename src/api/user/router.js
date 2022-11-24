@@ -1,12 +1,12 @@
 import { Router } from 'express';
 
 import {
-  getAllController, getOneController, createController,
+  getAllController, getOneController,
   deleteController, updateController,
 } from './controller.js';
 import { expressValidationResult } from '../../utils/utils-middleware.js';
 import {
-  updateValidation, getOneValidation, createValidation, deleteValidation,
+  updateValidation, getOneValidation, deleteValidation,
 } from './validation.js';
 
 const router = Router();
@@ -18,7 +18,5 @@ router.get('/:id', ...getOneValidation(), expressValidationResult, getOneControl
 router.delete('/:id', ...deleteValidation(), expressValidationResult, deleteController);
 
 router.put('/:id', ...updateValidation(), expressValidationResult, updateController);
-
-router.post('/', ...createValidation(), expressValidationResult, createController);
 
 export default router;

@@ -28,9 +28,9 @@ export const getOneByUsernameRepository = async (userName) => {
     }
 };
 
-export const getOneByEmailRepository = async (email) => {
+export const getOneByEmailRepository = async (email, projections) => {
     try {
-        return await User.findOne({ email });
+        return await User.findOne({ email }).select(projections);
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }
