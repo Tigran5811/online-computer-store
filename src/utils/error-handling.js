@@ -13,3 +13,10 @@ export class RepositoryError extends Error {
         this.location = 'Repository';
     }
 }
+export class UtilsError extends Error {
+    constructor(message, sc) {
+        super(message);
+        this.statusCode = sc;
+        this.location = 'Utils';
+    }
+}

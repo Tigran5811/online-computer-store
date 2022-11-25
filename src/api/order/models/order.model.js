@@ -8,8 +8,27 @@ const orderSchema = new mongoose.Schema({
     },
     laptop: {
         type: mongoose.Types.ObjectId,
-        required: true,
         ref: 'Laptop',
+    },
+    display: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Display',
+    },
+    keyboard: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Keyboard',
+    },
+    mouse: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Mouse',
+    },
+    processor: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Processor',
+    },
+    ram: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Ram',
     },
 });
 

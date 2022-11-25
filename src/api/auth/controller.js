@@ -15,8 +15,8 @@ export const signInController = async (req, res, next) => {
   try {
     const { body } = req;
 
-    const created = await signInService(body);
-    res.send(created);
+    const token = await signInService(body);
+    res.send({ token });
   } catch (err) {
     next(err);
   }

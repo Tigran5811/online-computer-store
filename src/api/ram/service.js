@@ -17,7 +17,7 @@ export const getOneService = async (id) => {
         ['image'],
     );
     if (!gotten) {
-        throw new ServiceError('User not found', 404);
+        throw new ServiceError('Ram not found', 404);
     }
     return gotten;
 };

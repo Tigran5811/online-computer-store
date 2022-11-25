@@ -9,13 +9,15 @@ import keyboardRouter from './keyboard/router.js';
 import displayRouter from './display/router.js';
 import ramRouter from './ram/router.js';
 import processorRouter from './processor/router.js';
+import authRouter from './auth/router.js';
+import { authorization } from '../utils/utils-middleware.js';
 
 const app = express();
 
 app.use(express.json());
 app.use(morgan('combined'));
 
-app.use('/user', userRouter);
+app.use('/user', authorization, userRouter);
 app.use('/laptop', laptopRouter);
 app.use('/order', orderRouter);
 app.use('/image', imageRouter);
@@ -24,6 +26,7 @@ app.use('/keyboard', keyboardRouter);
 app.use('/display', displayRouter);
 app.use('/ram', ramRouter);
 app.use('/processor', processorRouter);
+app.use('/auth', authRouter);
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {

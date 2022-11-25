@@ -11,7 +11,7 @@ export const getAllService = async () => getAllRepository();
 export const getOneService = async (id) => {
     const gotten = await getOneRepository(id);
     if (!gotten) {
-        throw new ServiceError('User not found', 404);
+        throw new ServiceError('Image not found', 404);
     }
     return gotten;
 };

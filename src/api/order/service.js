@@ -6,12 +6,12 @@ import {
     deleteRepository,
 } from './repository.js';
 
-export const getAllService = async () => getAllRepository([], {}, ['user', 'laptop']);
+export const getAllService = async () => getAllRepository([], {}, ['user', 'laptop', 'display', 'keyboard', 'mouse', 'processor', 'ram']);
 
 export const getOneService = async (id) => {
-    const gotten = await getOneRepository(id, ['user', 'laptop']);
+    const gotten = await getOneRepository(id, ['user', 'laptop', 'display', 'keyboard', 'mouse', 'processor', 'ram']);
     if (!gotten) {
-        throw new ServiceError('User not found', 404);
+        throw new ServiceError('Order not found', 404);
     }
     return gotten;
 };
