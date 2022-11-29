@@ -10,7 +10,8 @@ import {
     getOneByEmailRepository,
 } from './repository.js';
 import { createService as createAdditionalService } from '../user-additional/service.js';
-import { hashPassword } from '../../utils/bcrypt-utils.js';
+import { comparePassword, hashPassword } from '../../utils/bcrypt-utils.js';
+import { decodeToken } from '../../utils/jwt-utils.js';
 
 export const getAllService = async () => getAllRepository(
     ['email', 'userName', 'userAdditional', 'password', 'isEmailVerified'],
@@ -20,7 +21,7 @@ export const getAllService = async () => getAllRepository(
 export const getOneService = async (id) => {
     const gotten = await getOneRepository(
         id,
-        ['email', 'userName', 'userAdditional'],
+        ['email', 'userName', 'userAdditional', 'password', 'isEmailVerified'],
         ['userAdditional'],
     );
     if (!gotten) {
@@ -78,12 +79,24 @@ export const deleteService = async (id) => {
 };
 
 export const updateService = async (id, body) => {
-    if (body.userName) {
-        await checkIsUserExistsByUserName(body.userName);
-    }
-    if (body.email) {
-        await checkIsUserExistsByEmail(body.email);
-    }
     await getOneService(id);
-    await updateRepository(id, body);
+    const updated = body;
+    if (updated.password) {
+        const hash = await hashPassword(updated.password);
+        updated.password = hash;
+    }
+    await updateRepository(id, updated);
+};
+
+export const changePasswordService = async (headers, body) => {
+    const { password, newPassword, campersPassword } = body;
+    const changed = body;
+    const token = headers.authorization.split(' ')[1];
+    const decoded = decodeToken(token);
+    const user = await getOneService(decoded.id);
+    await comparePassword(password, user.password);
+    if (newPassword === campersPassword) {
+        changed.password = newPassword;
+        await updateService(user.id, body);
+    }
 };

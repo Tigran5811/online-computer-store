@@ -1,6 +1,6 @@
 import {
   updateService, getOneService,
-  getAllService, deleteService,
+  getAllService, deleteService, changePasswordService,
 } from './service.js';
 
 export const getAllController = async (req, res, next) => {
@@ -38,6 +38,16 @@ export const updateController = async (req, res, next) => {
     const { body } = req;
     const updated = await updateService(id, body);
     res.send(updated);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const changePasswordController = async (req, res, next) => {
+  try {
+    const { headers, body } = req;
+    await changePasswordService(headers, body);
+    res.send({ message: 'success' });
   } catch (error) {
     next(error);
   }

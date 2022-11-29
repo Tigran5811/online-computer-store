@@ -22,7 +22,7 @@ export const signUpValidation = () => [
     body('age').isInt({ min: 5, max: 120 }).withMessage(errorMessage.fromToInteger(5, 120)),
     body('email').isEmail().withMessage(errorMessage.invalidEmail),
     body('school').isLength({ min: 3, max: 20 })
-    .withMessage(errorMessage.fromToString(3, 20)),
+        .withMessage(errorMessage.fromToString(3, 20)),
 
 ];
 
@@ -34,7 +34,14 @@ export const signInValidation = () => [
 ];
 
 export const verifyEmailValidation = () => [
-
     body('token').isJWT().withMessage(errorMessage.invalidToken),
+];
+
+export const forgetPasswordValidation = () => [
+    body('email').isEmail().withMessage(errorMessage.invalidEmail),
+];
+export const recoverPasswordValidation = () => [
+    body('token').isJWT().withMessage(errorMessage.invalidToken),
+    body('password').isLength({ min: 8, max: 20 }).withMessage(errorMessage.fromToString(8, 20)),
 
 ];

@@ -43,3 +43,26 @@ export const verifyEmailService = async (body) => {
         throw new ServiceError('Token expired', 401);
     }
 };
+
+export const forgetPasswordService = async (body) => {
+    const { email } = body;
+    try {
+        const user = await getOneByEmailService(email);
+        if (user.email === email) {
+            const token = getToken({ id: user.id }, '15m');
+            await sendEmail(user.email, 'Verification token', `Your verification token ${token}`);
+        }
+    } catch (err) {
+        throw new ServiceError('Invalid credentials', 401);
+    }
+};
+
+export const recoverPasswordService = async (body) => {
+    const { token, ...pass } = body;
+    try {
+        const decoded = decodeToken(token);
+        await userUpdateService(decoded.id, pass);
+    } catch (err) {
+        throw new ServiceError('Token expired', 401);
+    }
+};

@@ -3,10 +3,11 @@ import { Router } from 'express';
 import {
   getAllController, getOneController,
   deleteController, updateController,
+  changePasswordController,
 } from './controller.js';
 import { expressValidationResult } from '../../utils/utils-middleware.js';
 import {
-  updateValidation, getOneValidation, deleteValidation,
+  updateValidation, getOneValidation, deleteValidation, changePasswordValidation,
 } from './validation.js';
 
 const router = Router();
@@ -18,5 +19,7 @@ router.get('/:id', ...getOneValidation(), expressValidationResult, getOneControl
 router.delete('/:id', ...deleteValidation(), expressValidationResult, deleteController);
 
 router.put('/:id', ...updateValidation(), expressValidationResult, updateController);
+
+router.post('/change-password', ...changePasswordValidation(), expressValidationResult, changePasswordController);
 
 export default router;
