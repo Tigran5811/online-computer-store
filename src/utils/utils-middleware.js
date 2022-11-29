@@ -9,6 +9,7 @@ export const expressValidationResult = async (req, res, next) => {
     }
     return next();
 };
+
 export const authorization = async (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
@@ -17,7 +18,7 @@ export const authorization = async (req, res, next) => {
             id: decoded.id,
         };
         return next();
-    } catch (err) {
+      } catch (err) {
         return next(new UtilsError('unauthorized', 401));
-    }
-};
+      }
+  };

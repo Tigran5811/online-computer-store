@@ -3,7 +3,8 @@ export const isMongoId = 'field must be mongo id';
 export const isInt = 'field must be integer';
 export const onlyLetters = 'field must contain only letters';
 export const uppercase = 'field must be uppercase';
-export const email = 'An invalid email occurs ';
+export const invalidEmail = 'An invalid email';
+export const invalidToken = 'An invalid token';
 export const isBoolean = 'Flag property only accepts boolean';
 export const isDecimal = 'field property only accepts is decimal number';
 

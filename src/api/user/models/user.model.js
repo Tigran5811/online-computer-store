@@ -27,6 +27,9 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    isEmailVerified: {
+        type: String,
+    },
     userAdditional: {
         type: mongoose.Types.ObjectId,
         required: true,

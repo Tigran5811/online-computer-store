@@ -13,7 +13,7 @@ import { createService as createAdditionalService } from '../user-additional/ser
 import { hashPassword } from '../../utils/bcrypt-utils.js';
 
 export const getAllService = async () => getAllRepository(
-    ['email', 'userName', 'userAdditional', 'password'],
+    ['email', 'userName', 'userAdditional', 'password', 'isEmailVerified'],
     ['userAdditional'],
 );
 
@@ -30,7 +30,7 @@ export const getOneService = async (id) => {
 };
 
 export const getOneByEmailService = async (email) => {
-    const gotten = await getOneByEmailRepository(email, ['password']);
+    const gotten = await getOneByEmailRepository(email, ['password', 'email', 'isEmailVerified']);
     if (!gotten) {
         throw new ServiceError('User not found', 404);
     }

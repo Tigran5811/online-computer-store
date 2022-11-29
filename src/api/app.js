@@ -1,5 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
+import cors from 'cors';
 import userRouter from './user/router.js';
 import laptopRouter from './laptop/router.js';
 import orderRouter from './order/router.js';
@@ -16,6 +17,19 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan('combined'));
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    next();
+});
+app.options('*', cors());
 
 app.use('/user', authorization, userRouter);
 app.use('/laptop', laptopRouter);
