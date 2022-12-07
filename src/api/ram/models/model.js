@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { CoreSchema } from '../../../core/core-schema.js';
 
-const ramSchema = new mongoose.Schema({
+const ramSchema = new CoreSchema({
     name: {
         type: String,
         required: true,

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { CoreSchema } from '../../../core/core-schema.js';
 
-const keyboardSchema = new mongoose.Schema({
+const keyboardSchema = new CoreSchema({
     name: {
         type: String,
         required: true,

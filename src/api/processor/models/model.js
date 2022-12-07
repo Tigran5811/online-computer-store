@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { CoreSchema } from '../../../core/core-schema.js';
 
-const processorSchema = new mongoose.Schema({
+const processorSchema = new CoreSchema({
     name: {
         type: String,
         required: true,

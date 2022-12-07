@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { CoreSchema } from '../../../core/core-schema.js';
 
-const displaySchema = new mongoose.Schema({
+const displaySchema = new CoreSchema({
     name: {
         type: String,
         required: true,

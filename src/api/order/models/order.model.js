@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { CoreSchema } from '../../../core/core-schema.js';
 
-const orderSchema = new mongoose.Schema({
+const orderSchema = new CoreSchema({
     user: {
         type: mongoose.Types.ObjectId,
         required: true,

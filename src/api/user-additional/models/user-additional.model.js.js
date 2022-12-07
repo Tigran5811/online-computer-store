@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { CoreSchema } from '../../../core/core-schema.js';
 
-const userAdditionalSchema = new mongoose.Schema({
+const userAdditionalSchema = new CoreSchema({
     school: {
         type: String,
     },

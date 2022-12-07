@@ -1,69 +1,64 @@
-import { userNameExist, userEmailExist } from '../../constants/error-massages.js';
 import { ServiceError } from '../../utils/error-handling.js';
 import {
-    getOneRepository,
-    getOneByUsernameRepository,
     createRepository,
+    softDeleteRepository,
     getAllRepository,
-    deleteRepository,
-    updateRepository,
     getOneByEmailRepository,
+    getOneByUsernameRepository,
+    getOneRepository, updateRepository,
 } from './repository.js';
-import { createService as createAdditionalService } from '../user-additional/service.js';
-import { comparePassword, hashPassword } from '../../utils/bcrypt-utils.js';
-import { decodeToken } from '../../utils/jwt-utils.js';
+import {
+    createService as createAdditionalService,
+} from '../user-additional/service.js';
+import {
+    emailExist, usernameExist, notFound, invalidCred,
+} from '../../constants/error-massages.js';
+import { hashPassword } from '../../utils/bcrypt-utils.js';
 
-export const getAllService = async () => getAllRepository(
-    ['email', 'userName', 'userAdditional', 'password', 'isEmailVerified'],
-    ['userAdditional'],
-);
-
-export const getOneService = async (id) => {
-    const gotten = await getOneRepository(
-        id,
-        ['email', 'userName', 'userAdditional', 'password', 'isEmailVerified'],
-        ['userAdditional'],
-    );
-    if (!gotten) {
-        throw new ServiceError('User not found', 404);
+const existsByUsername = async (username) => {
+    const userExists = await getOneByUsernameRepository(username);
+    if (userExists) {
+        throw new ServiceError(usernameExist, 409);
     }
-    return gotten;
+};
+
+const existsByEmail = async (email) => {
+    const userIsExists = await getOneByEmailRepository(email);
+    if (userIsExists) {
+        throw new ServiceError(emailExist, 409);
+    }
 };
 
 export const getOneByEmailService = async (email) => {
-    const gotten = await getOneByEmailRepository(email, ['password', 'email', 'isEmailVerified']);
+    const gotten = await getOneByEmailRepository(email, ['password'], 'email', 'isEmailVerified');
     if (!gotten) {
-        throw new ServiceError('User not found', 404);
+        throw new ServiceError(...notFound('User'));
     }
     return gotten;
 };
 
-const checkIsUserExistsByUserName = async (userName) => {
-    const userIsExists = await getOneByUsernameRepository(userName);
-    if (userIsExists) {
-        throw new ServiceError(userNameExist, 409);
-    }
-};
+export const getAllService = async () => getAllRepository(['email', 'username', 'deletedAt', 'userAdditional', 'isEmailVerified'], ['userAdditional']);
 
-const checkIsUserExistsByEmail = async (email) => {
-    const userIsExists = await getOneByEmailRepository(email, ['id']);
-    if (userIsExists) {
-        throw new ServiceError(userEmailExist, 409);
+export const getOneService = async (id) => {
+    const gotten = await getOneRepository(id, ['email', 'username', 'password', 'userAdditional', 'isEmailVerified'], ['userAdditional']);
+    if (!gotten) {
+        throw new ServiceError(notFound('User'), 404);
     }
+    return gotten;
 };
 
 export const createService = async (body) => {
     const {
-        userName, password, firstName, lastName, age, email, ...additionalData
+        username, password, firstName, lastName, age, email, ...additionalData
     } = body;
-    await checkIsUserExistsByUserName(userName);
-    await checkIsUserExistsByEmail(email);
+    await existsByUsername(username);
+    await existsByEmail(email);
     const createdAdditionalData = await createAdditionalService(additionalData);
 
     const hash = await hashPassword(password);
 
     return createRepository({
-        userName,
+        username,
         password: hash,
         firstName,
         lastName,
@@ -73,30 +68,33 @@ export const createService = async (body) => {
     });
 };
 
+export const updateService = async (id, body) => {
+    if (body.username) {
+        await existsByUsername(body.username);
+    }
+    if (body.email) {
+        await existsByEmail(body.email);
+    }
+    await getOneService(id);
+    return updateRepository(id, body);
+};
+
+export const changePasswordService = async (body, userId) => {
+    const {
+        oldPassword, newPassword, confirmPassword,
+    } = body;
+    const user = await getOneService(userId);
+    if (oldPassword !== user.password) {
+        throw new ServiceError(invalidCred, 401);
+    }
+    if (newPassword !== confirmPassword) {
+        throw new ServiceError(invalidCred, 401);
+    }
+    const hash = await hashPassword(newPassword);
+    await updateService(user.id, { password: hash });
+};
+
 export const deleteService = async (id) => {
     await getOneService(id);
-    await deleteRepository(id);
-};
-
-export const updateService = async (id, body) => {
-    await getOneService(id);
-    const updated = body;
-    if (updated.password) {
-        const hash = await hashPassword(updated.password);
-        updated.password = hash;
-    }
-    await updateRepository(id, updated);
-};
-
-export const changePasswordService = async (headers, body) => {
-    const { password, newPassword, campersPassword } = body;
-    const changed = body;
-    const token = headers.authorization.split(' ')[1];
-    const decoded = decodeToken(token);
-    const user = await getOneService(decoded.id);
-    await comparePassword(password, user.password);
-    if (newPassword === campersPassword) {
-        changed.password = newPassword;
-        await updateService(user.id, body);
-    }
+    return softDeleteRepository(id);
 };

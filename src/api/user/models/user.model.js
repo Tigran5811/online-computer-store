@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
+import { CoreSchema } from '../../../core/core-schema.js';
 
-const userSchema = new mongoose.Schema({
-    userName: {
+const userSchema = new CoreSchema({
+    username: {
         type: String,
         required: true,
         unique: true,

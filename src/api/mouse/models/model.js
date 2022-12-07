@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { CoreSchema } from '../../../core/core-schema.js';
 
-const mouseSchema = new mongoose.Schema({
+const mouseSchema = new CoreSchema({
     name: {
         type: String,
         required: true,

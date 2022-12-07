@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { CoreSchema } from '../../../core/core-schema.js';
 
-const laptopSchema = new mongoose.Schema({
+const laptopSchema = new CoreSchema({
     Manufacturer: {
         type: String,
         required: true,
