@@ -2,26 +2,26 @@ import { Router } from 'express';
 
 import {
   createController,
-  getAllController,
+  // getAllController,
   getOneController,
   deleteController,
   getAllOrdersByUserController,
 } from './controller.js';
-import { expressValidationResult } from '../../utils/utils-middleware.js';
+import { expressValidationResult, userAuthorization } from '../../utils/utils-middleware.js';
 import {
    getOneValidation, createValidation, deleteValidation, getAllOrdersByUserValidation,
 } from './validation.js';
 
 const router = Router();
 
-router.get('/', getAllController);
+// router.get('/', userAuthorization, getAllController);
 
-router.get('/:id', ...getOneValidation(), expressValidationResult, getOneController);
+router.get('/:id', userAuthorization, ...getOneValidation(), expressValidationResult, getOneController);
 
-router.delete('/:id', ...deleteValidation(), expressValidationResult, deleteController);
+router.delete('/:id', userAuthorization, ...deleteValidation(), expressValidationResult, deleteController);
 
-router.put('/:id', ...getAllOrdersByUserValidation(), expressValidationResult, getAllOrdersByUserController);
+router.put('/:id', userAuthorization, ...getAllOrdersByUserValidation(), expressValidationResult, getAllOrdersByUserController);
 
-router.post('/', ...createValidation(), expressValidationResult, createController);
+router.post('/', userAuthorization, ...createValidation(), expressValidationResult, createController);
 
 export default router;

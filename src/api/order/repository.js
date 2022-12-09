@@ -1,17 +1,22 @@
 import { RepositoryError } from '../../utils/error-handling.js';
 import { Order } from './models/order.model.js';
 
-export const getAllRepository = async (selectPop, where, populateProps) => {
+export const getAllRepository = async (projections, populateProps, userId) => {
     try {
-        return await Order.find().select(selectPop).where(where).populate(populateProps);
+        return await Order.find()
+        .select(projections)
+        .populate(populateProps)
+        .where({ user: userId });
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }
 };
 
-export const getOneRepository = async (id, populateProps) => {
+export const getOneRepository = async (id, userId, populateProps) => {
     try {
-        return await Order.findOne({ _id: id }).populate(populateProps);
+        return await Order.findOne({ _id: id })
+        .populate(populateProps)
+        .where({ user: userId });
     } catch (err) {
         throw new RepositoryError(err.message, 500);
     }

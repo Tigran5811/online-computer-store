@@ -6,10 +6,11 @@ import {
     deleteRepository,
 } from './repository.js';
 
-export const getAllService = async () => getAllRepository([], {}, ['user', 'laptop', 'display', 'keyboard', 'mouse', 'processor', 'ram']);
+// export const getAllService = async (userId) => getAllRepository(userId,
+// ['user', 'laptop', 'display', 'keyboard', 'mouse', 'processor', 'ram']);
 
-export const getOneService = async (id) => {
-    const gotten = await getOneRepository(id, ['user', 'laptop', 'display', 'keyboard', 'mouse', 'processor', 'ram']);
+export const getOneService = async (id, userId) => {
+    const gotten = await getOneRepository(id, userId, ['user', 'laptop', 'display', 'keyboard', 'mouse', 'processor', 'ram']);
     if (!gotten) {
         throw new ServiceError('Order not found', 404);
     }
@@ -18,13 +19,13 @@ export const getOneService = async (id) => {
 
 export const createService = async (body) => createRepository(body);
 
-export const deleteService = async (id) => {
-    await getOneService(id);
+export const deleteService = async (id, userID) => {
+    await getOneService(id, userID);
     await deleteRepository(id);
 };
 
 export const getAllOrdersByUserService = async (userId) => {
-    const users = await getAllRepository(['laptop'], { user: userId }, ['user', 'laptop']);
+    const users = await getAllRepository(['user', 'laptop', 'display', 'keyboard', 'mouse', 'processor', 'ram'], ['user', 'laptop', 'display', 'keyboard', 'mouse', 'processor', 'ram'], userId);
 
     return users;
 };

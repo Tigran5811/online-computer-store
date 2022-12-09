@@ -15,6 +15,11 @@ const userSchema = new CoreSchema({
         type: String,
         required: true,
     },
+    role: {
+        type: String,
+        required: true,
+        default: 'user',
+    },
     password: {
         type: String,
         required: true,
@@ -29,12 +34,7 @@ const userSchema = new CoreSchema({
         required: true,
     },
     isEmailVerified: {
-        type: String,
-    },
-    userAdditional: {
-        type: mongoose.Types.ObjectId,
-        required: true,
-        ref: 'UserAdditional',
+        type: Boolean,
     },
 });
 

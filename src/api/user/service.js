@@ -8,12 +8,9 @@ import {
     getOneRepository, updateRepository,
 } from './repository.js';
 import {
-    createService as createAdditionalService,
-} from '../user-additional/service.js';
-import {
     emailExist, usernameExist, notFound, invalidCred,
 } from '../../constants/error-massages.js';
-import { hashPassword } from '../../utils/bcrypt-utils.js';
+import { hashPassword, comparePassword } from '../../utils/bcrypt-utils.js';
 
 const existsByUsername = async (username) => {
     const userExists = await getOneByUsernameRepository(username);
@@ -37,10 +34,10 @@ export const getOneByEmailService = async (email) => {
     return gotten;
 };
 
-export const getAllService = async () => getAllRepository(['email', 'username', 'deletedAt', 'userAdditional', 'isEmailVerified'], ['userAdditional']);
+export const getAllService = async () => getAllRepository(['email', 'username', 'deletedAt', 'isEmailVerified']);
 
 export const getOneService = async (id) => {
-    const gotten = await getOneRepository(id, ['email', 'username', 'password', 'userAdditional', 'isEmailVerified'], ['userAdditional']);
+    const gotten = await getOneRepository(id, ['email', 'username', 'password', 'isEmailVerified', 'role']);
     if (!gotten) {
         throw new ServiceError(notFound('User'), 404);
     }
@@ -48,23 +45,12 @@ export const getOneService = async (id) => {
 };
 
 export const createService = async (body) => {
-    const {
-        username, password, firstName, lastName, age, email, ...additionalData
-    } = body;
-    await existsByUsername(username);
-    await existsByEmail(email);
-    const createdAdditionalData = await createAdditionalService(additionalData);
-
-    const hash = await hashPassword(password);
-
+    await existsByUsername(body.username);
+    await existsByEmail(body.email);
+    const hash = await hashPassword(body.password);
     return createRepository({
-        username,
+        ...body,
         password: hash,
-        firstName,
-        lastName,
-        age,
-        email,
-        userAdditional: createdAdditionalData.id,
     });
 };
 
@@ -79,22 +65,30 @@ export const updateService = async (id, body) => {
     return updateRepository(id, body);
 };
 
-export const changePasswordService = async (body, userId) => {
+export const changePasswordService = async (userId, body) => {
     const {
-        oldPassword, newPassword, confirmPassword,
+        password, newPassword, confirmPassword,
     } = body;
+
     const user = await getOneService(userId);
-    if (oldPassword !== user.password) {
+    const chekaPassword = await comparePassword(password, user.password);
+    if (!chekaPassword) {
         throw new ServiceError(invalidCred, 401);
     }
+
     if (newPassword !== confirmPassword) {
         throw new ServiceError(invalidCred, 401);
     }
+
     const hash = await hashPassword(newPassword);
     await updateService(user.id, { password: hash });
 };
 
 export const deleteService = async (id) => {
-    await getOneService(id);
+    const user = await getOneService(id);
+    if (user.role === 'SuperAdmin') {
+        throw new ServiceError('admin cannot be deleted', 401);
+    }
+
     return softDeleteRepository(id);
 };

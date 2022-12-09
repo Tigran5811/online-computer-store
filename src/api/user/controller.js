@@ -34,7 +34,7 @@ export const deleteController = async (req, res, next) => {
 
 export const updateController = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.user;
     const { body } = req;
     const updated = await updateService(id, body);
     res.send(updated);
@@ -45,8 +45,8 @@ export const updateController = async (req, res, next) => {
 
 export const changePasswordController = async (req, res, next) => {
   try {
-    const { headers, body } = req;
-    await changePasswordService(headers, body);
+    const { body } = req;
+    await changePasswordService(req.user.id, body);
     res.send({ message: 'success' });
   } catch (error) {
     next(error);

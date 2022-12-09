@@ -11,7 +11,6 @@ import displayRouter from './display/router.js';
 import ramRouter from './ram/router.js';
 import processorRouter from './processor/router.js';
 import authRouter from './auth/router.js';
-import { authorization } from '../utils/utils-middleware.js';
 
 const app = express();
 
@@ -31,15 +30,15 @@ app.use((req, res, next) => {
 });
 app.options('*', cors());
 
-app.use('/user', authorization, userRouter);
-app.use('/laptop', authorization, laptopRouter);
+app.use('/user', userRouter);
+app.use('/laptop', laptopRouter);
 app.use('/order', orderRouter);
-app.use('/image', authorization, imageRouter);
-app.use('/mouse', authorization, mouseRouter);
-app.use('/keyboard', authorization, keyboardRouter);
-app.use('/display', authorization, displayRouter);
-app.use('/ram', authorization, ramRouter);
-app.use('/processor', authorization, processorRouter);
+app.use('/image', imageRouter);
+app.use('/mouse', mouseRouter);
+app.use('/keyboard', keyboardRouter);
+app.use('/display', displayRouter);
+app.use('/ram', ramRouter);
+app.use('/processor', processorRouter);
 app.use('/auth', authRouter);
 
 // eslint-disable-next-line no-unused-vars

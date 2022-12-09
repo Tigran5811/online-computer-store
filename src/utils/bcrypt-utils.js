@@ -9,4 +9,5 @@ export const comparePassword = async (pass, hash) => {
    if (!compared) {
         throw new Error();
    }
+   return compared;
 };

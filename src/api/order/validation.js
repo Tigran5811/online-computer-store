@@ -11,8 +11,12 @@ export const deleteValidation = () => [
 
 export const createValidation = () => [
     body('user').isMongoId().withMessage(errorMessage.isMongoId),
-    body('laptop').isMongoId().withMessage(errorMessage.isMongoId),
-
+    body('laptop').isMongoId().withMessage(errorMessage.isMongoId).optional(),
+    body('display').isMongoId().withMessage(errorMessage.isMongoId).optional(),
+    body('keyboard').isMongoId().withMessage(errorMessage.isMongoId).optional(),
+    body('mouse').isMongoId().withMessage(errorMessage.isMongoId).optional(),
+    body('processor').isMongoId().withMessage(errorMessage.isMongoId).optional(),
+    body('ram').isMongoId().withMessage(errorMessage.isMongoId).optional(),
 ];
 
 export const getAllOrdersByUserValidation = () => [

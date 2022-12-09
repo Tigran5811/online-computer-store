@@ -5,7 +5,7 @@ import {
   getAllController, getOneController,
   deleteController,
 } from './controller.js';
-import { expressValidationResult } from '../../utils/utils-middleware.js';
+import { expressValidationResult, adminAuthorization } from '../../utils/utils-middleware.js';
 import {
   getOneValidation, deleteValidation,
 } from './validation.js';
@@ -18,8 +18,8 @@ router.get('/', getAllController);
 
 router.get('/:id', ...getOneValidation(), expressValidationResult, getOneController);
 
-router.delete('/:id', ...deleteValidation(), expressValidationResult, deleteController);
+router.delete('/:id', adminAuthorization, ...deleteValidation(), expressValidationResult, deleteController);
 
-router.post('/', upload.single('image'), createController);
+router.post('/', adminAuthorization, upload.single('image'), createController);
 
 export default router;

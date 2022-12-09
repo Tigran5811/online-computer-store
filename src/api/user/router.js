@@ -1,25 +1,23 @@
 import { Router } from 'express';
-
 import {
-  getAllController, getOneController,
-  deleteController, updateController,
-  changePasswordController,
+  getAllController, getOneController, deleteController,
+  updateController, changePasswordController,
 } from './controller.js';
-import { expressValidationResult } from '../../utils/utils-middleware.js';
 import {
   updateValidation, getOneValidation, deleteValidation, changePasswordValidation,
 } from './validation.js';
+import { expressValidationResult, adminAuthorization, userAuthorization } from '../../utils/utils-middleware.js';
 
 const router = Router();
 
-router.get('/', getAllController);
+router.get('/', adminAuthorization, getAllController);
 
-router.get('/:id', ...getOneValidation(), expressValidationResult, getOneController);
+router.get('/:id', adminAuthorization, ...getOneValidation(), expressValidationResult, getOneController);
 
-router.delete('/:id', ...deleteValidation(), expressValidationResult, deleteController);
+router.put('/:id', userAuthorization, ...updateValidation(), expressValidationResult, updateController);
 
-router.put('/:id', ...updateValidation(), expressValidationResult, updateController);
+router.delete('/:id', userAuthorization, ...deleteValidation(), expressValidationResult, deleteController);
 
-router.post('/change-password', ...changePasswordValidation(), expressValidationResult, changePasswordController);
+router.post('/change-password', userAuthorization, ...changePasswordValidation(), expressValidationResult, changePasswordController);
 
 export default router;
